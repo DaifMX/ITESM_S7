@@ -1,0 +1,17 @@
+{
+  "name": "Proyecto",
+  "version": "1.0.0",
+  "description": "Monitor ECG: ESP8266 -> API Express (puerto serie) -> dashboard React",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "server": "pnpm --dir server start",
+    "dashboard": "pnpm --dir dashboard dev",
+    "build": "pnpm --dir dashboard build",
+    "start": "pnpm --dir dashboard build && pnpm --dir server start",
+    "install_all": "pnpm install && pnpm --dir server install && pnpm --dir dashboard install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.25.0"
+}

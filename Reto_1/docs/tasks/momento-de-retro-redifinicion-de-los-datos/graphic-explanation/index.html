@@ -1,0 +1,828 @@
+<title>Explicador Visual T1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f5f7fa; --surface:#ffffff; --surface-2:#eef2f7;
+  --ink:#151a22; --ink-2:#4d5665; --muted:#7c8595; --line:#dfe4ec; --line-2:#c9d1dc;
+  --accent:#2a78d6; --accent-ink:#1c5cab; --accent-soft:#e6f0fc;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s7:#4a3aa7;
+  --good:#0ca30c; --crit:#d03b3b; --warn:#fab219; --good-ink:#006300;
+  --grid:#e1e0d9; --axis:#c3c2b7;
+  --display:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0f1216; --surface:#171b21; --surface-2:#1f242c;
+    --ink:#f2f4f7; --ink-2:#b8c0cc; --muted:#8a93a1; --line:#2a3038; --line-2:#3a424d;
+    --accent:#3987e5; --accent-ink:#86b6ef; --accent-soft:#16273d;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s7:#9085e9;
+    --good-ink:#0ca30c; --grid:#2c2c2a; --axis:#383835;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0f1216; --surface:#171b21; --surface-2:#1f242c;
+  --ink:#f2f4f7; --ink-2:#b8c0cc; --muted:#8a93a1; --line:#2a3038; --line-2:#3a424d;
+  --accent:#3987e5; --accent-ink:#86b6ef; --accent-soft:#16273d;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s7:#9085e9;
+  --good-ink:#0ca30c; --grid:#2c2c2a; --axis:#383835;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink)}
+.page{display:grid;grid-template-columns:220px minmax(0,1fr);gap:40px;max-width:1180px;margin:0 auto;padding:32px 24px 96px}
+nav.toc{position:sticky;top:24px;align-self:start;font-size:13.5px}
+nav.toc .toc-title{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+nav.toc ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+nav.toc li a{display:block;padding:5px 12px;color:var(--ink-2);text-decoration:none;border-left:2px solid transparent;margin-left:-2px}
+nav.toc li a:hover,nav.toc li a:focus-visible{color:var(--ink);border-left-color:var(--accent)}
+nav.toc li a .n{font-family:var(--mono);font-size:12px;color:var(--muted);margin-right:6px}
+main{min-width:0}
+header.hero{margin-bottom:48px}
+header.hero .eyebrow{font-family:var(--mono);font-size:12.5px;color:var(--muted);letter-spacing:.04em}
+header.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(30px,4.2vw,44px);line-height:1.08;margin:8px 0 14px;text-wrap:balance;letter-spacing:-.01em}
+header.hero p{max-width:65ch;color:var(--ink-2);margin:0}
+section{margin:0 0 72px;scroll-margin-top:24px}
+.eyebrow{font-family:var(--mono);font-size:12.5px;color:var(--accent-ink);letter-spacing:.04em}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(24px,3vw,32px);line-height:1.12;margin:6px 0 16px;text-wrap:balance;letter-spacing:-.01em}
+h3{font-family:var(--display);font-weight:700;font-size:19px;margin:28px 0 8px;letter-spacing:-.005em}
+.prose{max-width:65ch}
+.prose p{margin:0 0 12px}
+.prose ul{margin:0 0 12px;padding-left:20px}
+.prose li{margin-bottom:4px}
+code,.mono{font-family:var(--mono);font-size:.92em}
+code{background:var(--surface-2);padding:1px 5px;border-radius:4px;color:var(--ink)}
+.key{background:var(--accent-soft);color:var(--accent-ink);padding:1px 6px;border-radius:4px;font-weight:500}
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin:18px 0 8px}
+.fig .cap{font-size:13.5px;color:var(--ink-2);margin:10px 0 0;max-width:80ch}
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin-bottom:14px;font-size:14px}
+.controls label{display:flex;align-items:center;gap:8px;color:var(--ink-2)}
+.controls select,.controls input[type=range]{accent-color:var(--accent)}
+.controls select{font:inherit;font-size:14px;padding:4px 8px;border:1px solid var(--line-2);border-radius:6px;background:var(--surface);color:var(--ink)}
+.controls input[type=range]{width:180px}
+.btn{font:inherit;font-size:14px;font-weight:500;padding:6px 12px;border-radius:6px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn:hover{border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-ink);color:#fff}
+.btn:focus-visible,select:focus-visible,input:focus-visible,.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.value{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--body);fill:var(--ink-2);font-size:12px}
+svg .mono{font-family:var(--mono)}
+svg .ink{fill:var(--ink)}
+svg .muted{fill:var(--muted)}
+svg .axis{stroke:var(--axis);stroke-width:1}
+svg .gridl{stroke:var(--grid);stroke-width:1}
+.scroll-x{overflow-x:auto}
+.formula{font-family:var(--mono);font-size:15px;background:var(--surface-2);border-radius:8px;padding:12px 16px;margin:12px 0;overflow-x:auto;white-space:nowrap;line-height:1.7}
+.formula .t1{color:var(--s1);font-weight:500}
+.formula .t2{color:var(--s2);font-weight:500}
+.formula .t3{color:var(--s3);font-weight:500}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink-2);margin:8px 0 0}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;background:var(--sw)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{font:inherit;font-family:var(--mono);font-size:13px;padding:4px 10px;border-radius:999px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);cursor:pointer}
+.chip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.stat-readout{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:20px;align-items:start}
+@media (max-width:760px){.stat-readout{grid-template-columns:1fr}}
+.readout{background:var(--surface-2);border-radius:8px;padding:12px 14px;font-size:14px}
+.readout .big{font-family:var(--display);font-size:30px;font-weight:700;line-height:1.1;color:var(--ink);margin:2px 0 6px;font-variant-numeric:tabular-nums}
+.readout .def{font-family:var(--mono);font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.readout p{margin:0;color:var(--ink-2);font-size:13.5px}
+.count{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;font-family:var(--mono);font-size:15px;margin-top:12px;color:var(--ink-2)}
+.count b{font-family:var(--display);font-size:28px;color:var(--ink);font-weight:700}
+.name-out{font-family:var(--mono);font-size:22px;letter-spacing:.01em;margin:8px 0 2px;word-break:break-all}
+.name-out .p1{color:var(--s1)}.name-out .p2{color:var(--s2)}.name-out .p3{color:var(--s3)}.name-out .p4{color:var(--s7)}
+.name-desc{font-size:14px;color:var(--ink-2);max-width:70ch}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.card{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--surface);font-size:14px}
+.card .t{font-weight:600;margin-bottom:4px;color:var(--ink)}
+.card p{margin:0;color:var(--ink-2)}
+table.cm{border-collapse:separate;border-spacing:3px;font-variant-numeric:tabular-nums;font-size:14px}
+table.cm th{font-weight:500;color:var(--ink-2);font-family:var(--mono);font-size:13px;padding:4px 8px}
+table.cm td{width:58px;height:44px;text-align:center;border-radius:5px;cursor:default;color:var(--ink);font-weight:500;position:relative}
+table.cm td.diag{outline:2px solid var(--accent);outline-offset:-2px}
+table.cm tr.sel td{box-shadow:0 0 0 2px var(--s2) inset}
+table.cm th.rowh{cursor:pointer;border-radius:5px}
+table.cm th.rowh:hover,table.cm th.rowh.sel{background:var(--accent-soft);color:var(--accent-ink)}
+.metric-list{display:grid;grid-template-columns:1fr;gap:8px;font-size:14px}
+.metric-list .row{display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:baseline}
+.metric-list .row .k{color:var(--ink-2)}
+.metric-list .row .v{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.gauges{display:grid;gap:12px;margin-top:12px}
+.gauge{display:grid;grid-template-columns:200px 1fr 90px;gap:12px;align-items:center;font-size:14px}
+.gauge .bar{height:10px;background:var(--surface-2);border-radius:5px;position:relative;overflow:visible}
+.gauge .bar .fill{position:absolute;left:0;top:0;height:100%;border-radius:5px;background:var(--s1)}
+.gauge .bar .thr{position:absolute;top:-4px;width:2px;height:18px;background:var(--crit);border-radius:1px}
+.gauge .bar .thr::after{content:attr(data-l);position:absolute;top:19px;left:-20px;width:60px;text-align:center;font-size:11px;color:var(--muted);font-family:var(--mono)}
+.gauge .v{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);padding:6px 9px;border-radius:6px;font-size:12.5px;line-height:1.35;opacity:0;transform:translate(-50%,-120%);transition:opacity .12s;white-space:nowrap;z-index:9}
+.tip.on{opacity:1}
+.note{border-left:3px solid var(--s4);padding:8px 14px;background:var(--surface-2);border-radius:0 8px 8px 0;font-size:14px;color:var(--ink-2);margin:14px 0;max-width:72ch}
+.note b{color:var(--ink)}
+.kbd-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+@media (max-width:900px){.page{grid-template-columns:1fr}nav.toc{position:static}nav.toc ol{display:flex;flex-wrap:wrap;border:0;gap:2px}nav.toc li a{border:1px solid var(--line);border-radius:999px;margin:0;padding:3px 10px}}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="page">
+<nav class="toc" aria-label="Secciones">
+  <p class="toc-title">Secciones del doc</p>
+  <ol>
+    <li><a href="#s33"><span class="n">3.3</span>Las 842 columnas</a></li>
+    <li><a href="#stats"><span class="n">3.3</span>Los 14 estadísticos</a></li>
+    <li><a href="#s34"><span class="n">3.4</span>Cortar ventanas</a></li>
+    <li><a href="#s41"><span class="n">4.1</span>El modelo X·W</a></li>
+    <li><a href="#s42"><span class="n">4.2</span>Pérdida y gradiente</a></li>
+    <li><a href="#alpha"><span class="n">4.2</span>α e iteración de potencia</a></li>
+    <li><a href="#s44"><span class="n">4.3–4.4</span>Guardar y verificar</a></li>
+    <li><a href="#s5"><span class="n">5</span>Particiones</a></li>
+    <li><a href="#s6"><span class="n">6</span>Métricas</a></li>
+    <li><a href="#r2"><span class="n">6</span>Por qué R² ≈ 0.5</a></li>
+    <li><a href="#s8"><span class="n">8</span>El sondeo</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">Reto 1 · T1 · docs/tasks/t1-impl.md · secciones 3.3 → 6 y 8</div>
+  <h1>De la señal cruda a la predicción, paso a paso</h1>
+  <p>Cada sección de abajo toma una parte de la especificación y la convierte en algo que puedes mover con la mano. Los datos de las figuras son sintéticos o vienen del sondeo del documento; sirven para entender el mecanismo, no para reportar resultados.</p>
+</header>
+
+<!-- ======================= 3.3 NOMBRES ======================= -->
+<section id="s33">
+  <div class="eyebrow">§ 3.3 · Columnas de características</div>
+  <h2>Una repetición se convierte en 842 números</h2>
+  <div class="prose">
+    <p>El dataset original es una señal: 880 pasos de tiempo × 12 canales por cada repetición del ejercicio. Un modelo lineal no puede "leer" una señal, necesita una <b>fila de números fijos</b>. La idea es resumir cada señal con estadísticos.</p>
+    <p>Cada columna del CSV responde a cuatro preguntas: <span class="key">¿qué sensor?</span> <span class="key">¿qué canal?</span> <span class="key">¿qué tramo de la señal?</span> <span class="key">¿qué estadístico?</span> El nombre de la columna es exactamente esa combinación.</p>
+  </div>
+  <div class="fig">
+    <div class="controls">
+      <label>Sensor <select id="nb-sensor"><option value="1">1 · IMU del miembro</option><option value="2">2 · guante</option></select></label>
+      <label>Canal <select id="nb-chan"></select></label>
+      <label>Ventana <select id="nb-win"><option value="0">w0 · señal completa</option><option value="1">w1 · primer cuarto</option><option value="2" selected>w2 · segundo cuarto</option><option value="3">w3 · tercer cuarto</option><option value="4">w4 · último cuarto</option></select></label>
+      <label>Estadístico <select id="nb-stat"></select></label>
+    </div>
+    <div class="name-out" id="nb-out"></div>
+    <div class="name-desc" id="nb-desc"></div>
+    <div class="count"><span>12 canales</span>×<span>5 ventanas</span>×<span>14 estadísticos</span>=<b>840</b><span>+ 2 longitudes útiles =</span><b>842</b><span>columnas numéricas por repetición</span></div>
+    <p class="cap">Los dos sensores no son dos aparatos aislados: cada repetición <i>k</i> de <code>007_1.npy</code> y de <code>007_2.npy</code> es el mismo intento, visto por la IMU del miembro y por el guante. Por eso se concatenan en la misma fila.</p>
+  </div>
+</section>
+
+<!-- ======================= 3.3 ESTADÍSTICOS ======================= -->
+<section id="stats">
+  <div class="eyebrow">§ 3.3 · Estadísticos por ventana</div>
+  <h2>Los 14 estadísticos, calculados en vivo</h2>
+  <div class="prose">
+    <p>Toma una ventana <code>x</code> de <code>n</code> valores (arriba: en orden temporal; abajo: los mismos valores ordenados de menor a mayor, que es lo que necesitan mediana y cuartiles). Elige un estadístico para ver <b>qué parte de la señal mira</b> y cómo se calcula a mano, sin <code>np.median</code> ni <code>np.percentile</code>.</p>
+  </div>
+  <div class="fig">
+    <div class="chips" id="st-chips"></div>
+    <div class="controls">
+      <button class="btn" id="st-regen">Otra ventana aleatoria</button>
+      <button class="btn" id="st-test">Usar el vector de prueba [1, 2, 2, 3, 10]</button>
+    </div>
+    <div class="stat-readout">
+      <div>
+        <svg id="st-svg" viewBox="0 0 640 300" role="img" aria-label="Ventana de señal y valores ordenados"></svg>
+      </div>
+      <div class="readout" id="st-read"></div>
+    </div>
+    <p class="cap">La <b>moda</b> de una señal continua no existe "exacta" (ningún valor se repite), así que se aproxima con un histograma de 20 bins entre mín y máx y se toma el centro del bin más lleno. El <b>cv</b> divide entre <code>máx(|media|, 1)</code> porque muchas ventanas de pitch oscilan alrededor de 0° y <code>std/0.001</code> explotaría. <b>mad_diff</b> es el único que mira el <i>orden temporal</i>: mide cuánto cambia la señal de un paso al siguiente (velocidad angular), y distingue dos ejercicios que recorren el mismo rango a distinta velocidad.</p>
+  </div>
+</section>
+
+<!-- ======================= 3.4 VENTANAS ======================= -->
+<section id="s34">
+  <div class="eyebrow">§ 3.4 · Cómo se corta cada ventana</div>
+  <h2>Las ventanas se cortan sobre la longitud útil, no sobre los 880 pasos</h2>
+  <div class="prose">
+    <p>Cada repetición viene rellenada con ceros al final hasta llegar a 880 pasos. La <b>longitud útil</b> <code>L</code> son los pasos antes de ese relleno. Los bordes de las 4 ventanas se calculan como <code>e_k = round(k · L / 4)</code>, y la ventana <code>w0</code> es toda la señal útil <code>x[0:L]</code>.</p>
+    <p>Mueve <code>L</code> y cambia el modo de corte: con cortes fijos de 220 pasos, en cuanto la señal es corta, la cuarta ventana es puro relleno y sus estadísticos valen 0 por artefacto, no por fisiología.</p>
+  </div>
+  <div class="fig">
+    <div class="controls">
+      <label>Modo <select id="w-mode"><option value="util">Sobre longitud útil (spec)</option><option value="fixed">Fijo: 4 × 220 pasos (lo que NO se hace)</option></select></label>
+      <label>L sensor 1 <input type="range" id="w-l1" min="40" max="880" value="640" step="1"> <span class="value" id="w-l1v">640</span></label>
+      <label>L sensor 2 <input type="range" id="w-l2" min="40" max="880" value="590" step="1"> <span class="value" id="w-l2v">590</span></label>
+    </div>
+    <div class="scroll-x"><svg id="w-svg" viewBox="0 0 900 330" role="img" aria-label="Corte de ventanas sobre dos sensores"></svg></div>
+    <div class="legend"><span style="--sw:var(--s1)">w1</span><span style="--sw:var(--s2)">w2</span><span style="--sw:var(--s3)">w3</span><span style="--sw:var(--s4)">w4</span><span style="--sw:var(--muted)">relleno de ceros</span></div>
+    <p class="cap">Los dos sensores se cortan con <b>su propia</b> longitud útil, porque se segmentaron por separado y en la mitad de las repeticiones difieren en más de 10 pasos. Por debajo de 40 pasos (0.8 s) la repetición se descarta: con 4 ventanas quedarían menos de 10 muestras por ventana y los cuartiles dejan de tener sentido.</p>
+  </div>
+</section>
+
+<!-- ======================= 4.1 MODELO ======================= -->
+<section id="s41">
+  <div class="eyebrow">§ 4.1 · Modelo</div>
+  <h2>Regresión lineal usada como clasificador: Ŷ = X·W y luego argmax</h2>
+  <div class="prose">
+    <p>El problema es de clasificación (¿cuál de los 16 ejercicios es?), pero la técnica es regresión lineal. El truco es la codificación <b>one-hot</b> del rótulo: en vez de un número 0–15, cada fila tiene 16 salidas, todas 0 salvo un 1 en la clase correcta. Así se entrenan <b>16 regresiones lineales a la vez</b>, una por clase ("one-vs-rest"), y la clase predicha es la salida más alta.</p>
+    <ul>
+      <li><code>X</code>: <code>n × 843</code>. Las 842 características estandarizadas (z-score con media y desviación <i>del train</i>) más una columna de unos para el sesgo.</li>
+      <li><code>W</code>: <code>843 × 16</code>. Una columna de pesos por clase.</li>
+      <li><code>Ŷ = X·W</code>: <code>n × 16</code>. Salidas continuas, no acotadas a [0, 1].</li>
+    </ul>
+  </div>
+  <div class="fig">
+    <div class="controls">
+      <label>Clase real de la fila <input type="range" id="m-cls" min="0" max="15" value="7" step="1"> <span class="value" id="m-clsv">007</span></label>
+      <label>Ruido en las otras salidas <input type="range" id="m-noise" min="0" max="100" value="45" step="1"></label>
+      <button class="btn" id="m-shuffle">Otra fila</button>
+    </div>
+    <div class="scroll-x"><svg id="m-svg" viewBox="0 0 900 250" role="img" aria-label="Producto de una fila de X por W y argmax"></svg></div>
+    <p class="cap" id="m-cap"></p>
+  </div>
+  <div class="note"><b>Por qué no regresar el número 0–15 directamente:</b> el orden de los IDs no significa nada físico. Que <code>012</code> esté "entre" <code>011</code> y <code>013</code> es un accidente de numeración; un R² sobre ese número sería un artefacto. Con one-hot cada clase es una dimensión independiente.</div>
+</section>
+
+<!-- ======================= 4.2 PÉRDIDA ======================= -->
+<section id="s42">
+  <div class="eyebrow">§ 4.2 · Pérdida y gradiente</div>
+  <h2>Qué minimiza el descenso de gradiente</h2>
+  <div class="prose">
+    <p>La función de pérdida <code>J(W)</code> es un solo número que dice "qué tan mal van los pesos actuales". Tiene dos partes:</p>
+  </div>
+  <div class="formula">J(W) = <span class="t1">(1/2n) · ‖X·W − Y‖²</span> + <span class="t2">(λ/2n) · ‖W_sin_sesgo‖²</span><br>∇J &nbsp;= <span class="t1">(1/n) · Xᵀ(X·W − Y)</span> &nbsp;+ <span class="t2">(λ/n) · W_sin_sesgo</span><br>W &nbsp;← W − <span class="t3">α</span> · ∇J</div>
+  <div class="cards">
+    <div class="card"><div class="t" style="color:var(--s1)">Término de ajuste</div><p>Suma de errores al cuadrado entre lo que predice el modelo (<code>X·W</code>) y el one-hot real (<code>Y</code>). Es la parte de "mínimos cuadrados". El <code>1/2n</code> sólo normaliza por el número de filas y cancela el 2 al derivar.</p></div>
+    <div class="card"><div class="t" style="color:var(--s2)">Regularización L2</div><p>Penaliza pesos grandes. Con 842 características muy correlacionadas, sin esto el modelo puede "memorizar" el train con pesos enormes de signos opuestos. <code>λ</code> controla cuánto se castiga; se elige en <code>val</code> entre {0.01, 0.1, 1, 10, 100}. El sesgo no se penaliza.</p></div>
+    <div class="card"><div class="t" style="color:var(--s3)">Tasa de aprendizaje α</div><p><code>∇J</code> es la dirección en la que <code>J</code> sube más rápido, así que se camina en contra. <code>α</code> es el tamaño del paso: muy chico → lento; muy grande → se pasa del mínimo y diverge. Cada época es un paso con todas las filas (batch completo); 3,000 épocas.</p></div>
+  </div>
+  <div class="prose"><p>La figura de abajo muestra ese "caminar cuesta abajo" en un paisaje de dos pesos. Las elipses son curvas de nivel de <code>J</code>: mismo color = mismo valor de pérdida. Están tan alargadas porque las características están muy correlacionadas: en una dirección el valle es empinado (valor propio grande, ≈ 110) y en otra es casi plano.</p></div>
+</section>
+
+<!-- ======================= α / POTENCIA ======================= -->
+<section id="alpha">
+  <div class="eyebrow">§ 4.2 · Tasa de aprendizaje e iteración de potencia</div>
+  <h2>Por qué α = 0.05 diverge y α = 1/λ_max no</h2>
+  <div class="fig">
+    <div class="controls">
+      <label>α <input type="range" id="gd-alpha" min="0" max="100" value="47" step="1"> <span class="value" id="gd-alphav"></span></label>
+      <button class="btn primary" id="gd-run">Correr descenso</button>
+      <button class="btn" id="gd-a1">α = 1/λ_max</button>
+      <button class="btn" id="gd-a2">α = 0.05 (el del sondeo)</button>
+    </div>
+    <div class="grid2">
+      <svg id="gd-svg" viewBox="0 0 420 340" role="img" aria-label="Trayectoria del descenso de gradiente sobre curvas de nivel"></svg>
+      <svg id="gd-j" viewBox="0 0 420 340" role="img" aria-label="Curva de J por época"></svg>
+    </div>
+    <p class="cap" id="gd-cap"></p>
+  </div>
+  <div class="prose">
+    <p>En la dirección empinada, cada paso multiplica el error por <code>(1 − α·λ_max)</code>. Si <code>α·λ_max &gt; 2</code>, ese factor es menor que −1: cada paso te aleja más, oscilando de lado a lado. Con <code>λ_max ≈ 110</code>, <code>α = 0.05</code> da un factor de −4.5: diverge en la segunda época, exactamente lo que vio el sondeo. Con <code>α = 1/λ_max</code> el factor es 0 en la dirección empinada (llegas al fondo del valle en un paso) y las demás direcciones convergen seguro.</p>
+    <p>¿Y cómo se conoce <code>λ_max</code> sin <code>np.linalg.eig</code>? Con <b>iteración de potencia</b>: tomas cualquier vector <code>v</code>, lo multiplicas repetidamente por <code>XᵀX/n</code> y lo normalizas. Cada multiplicación estira más la componente que va en la dirección del valor propio más grande, así que <code>v</code> gira hasta alinearse con ella; entonces <code>λ_max ≈ ‖Av‖</code>.</p>
+  </div>
+  <div class="fig">
+    <div class="controls">
+      <button class="btn primary" id="pi-step">Una iteración: v ← Av / ‖Av‖</button>
+      <button class="btn" id="pi-ten">×10 iteraciones</button>
+      <button class="btn" id="pi-reset">Reiniciar con otro v</button>
+    </div>
+    <div class="grid2">
+      <svg id="pi-svg" viewBox="0 0 340 340" role="img" aria-label="Iteración de potencia"></svg>
+      <div class="readout" id="pi-read"></div>
+    </div>
+    <p class="cap">Ejemplo en 2D con una matriz cuyos valores propios son 110 y 3. La flecha gris punteada es la dirección propia dominante; la flecha azul es <code>v</code>. En el proyecto real la matriz es 843 × 843 pero el mecanismo es idéntico: 100 iteraciones, y <code>α = 1/λ_max</code>.</p>
+  </div>
+</section>
+
+<!-- ======================= 4.3 / 4.4 ======================= -->
+<section id="s44">
+  <div class="eyebrow">§ 4.3 – 4.4 · Lo que se guarda y cómo se verifica que aprende</div>
+  <h2>Cuatro pruebas de que el entrenamiento está bien</h2>
+  <div class="prose"><p><code>linreg.npz</code> guarda todo lo que <code>predict.py</code> necesita para repetir exactamente la transformación del entrenamiento: <code>W</code>, la media <code>mu</code> y desviación <code>sigma</code> de cada columna (para el z-score), el orden de las columnas y los hiperparámetros. Sin <code>mu</code>/<code>sigma</code> el modelo recibiría números en otra escala y todo se rompería en silencio.</p></div>
+  <div class="cards">
+    <div class="card"><div class="t">1 · J baja y nunca sube</div><p>Si la curva de pérdida en train sube en algún tramo, <code>α</code> es demasiado grande. Es la prueba más barata: se registra <code>J</code> cada 50 épocas.</p></div>
+    <div class="card"><div class="t">2 · Coincide con la solución cerrada</div><p>Para mínimos cuadrados con L2 existe una fórmula exacta: <code>W* = (XᵀX + λI)⁻¹ XᵀY</code>. Sólo en un test se calcula con <code>np.linalg.solve</code> y se compara: el <code>J</code> del descenso de gradiente debe quedar a &lt; 1 % del óptimo. Si no, el GD no convergió.</p></div>
+    <div class="card"><div class="t">3 · Los estadísticos dan lo esperado</div><p><code>stats.py</code> se prueba contra vectores pequeños calculados a mano, como <code>[1, 2, 2, 3, 10]</code>. Pruébalo arriba en la sección de estadísticos.</p></div>
+    <div class="card"><div class="t">4 · λ se elige en val, no en test</div><p>Se prueba <code>λ ∈ {0.01, 0.1, 1, 10, 100}</code> mirando macro-F1 en <code>val</code>. El ganador se fija <b>antes</b> de tocar <code>test</code>, que se usa una sola vez. Si eligieras λ mirando test, la métrica final estaría contaminada.</p></div>
+  </div>
+</section>
+
+<!-- ======================= 5 PARTICIONES ======================= -->
+<section id="s5">
+  <div class="eyebrow">§ 5 · Particiones</div>
+  <h2>70 / 15 / 15, estratificado, y una fuga que no se puede evitar</h2>
+  <div class="prose">
+    <p>Las 4,532 filas se reparten en tres conjuntos con papeles distintos: <b>train</b> ajusta los pesos, <b>val</b> elige hiperparámetros (λ), <b>test</b> se toca una sola vez para reportar. <b>Estratificar</b> significa hacer el reparto 70/15/15 <i>dentro de cada clase</i>, para que ninguna partición quede con una clase de más o de menos. La semilla fija y la columna <code>split</code> en el CSV hacen que cualquiera obtenga exactamente el mismo reparto.</p>
+  </div>
+  <div class="fig">
+    <div class="controls">
+      <button class="btn primary" id="sp-strat">Partir estratificado</button>
+      <button class="btn" id="sp-rand">Partir al azar (sin estratificar)</button>
+      <button class="btn" id="sp-reset">Reiniciar</button>
+    </div>
+    <div class="grid2">
+      <div class="scroll-x"><svg id="sp-svg" viewBox="0 0 520 300" role="img" aria-label="Reparto de repeticiones por clase"></svg></div>
+      <div class="readout" id="sp-read"></div>
+    </div>
+    <div class="legend"><span style="--sw:var(--s1)">train</span><span style="--sw:var(--s2)">val</span><span style="--sw:var(--s3)">test</span><span style="--sw:var(--line-2)">sin asignar</span></div>
+    <p class="cap">Cada punto son ~10 repeticiones. Conteos por clase ilustrativos (desbalance 1.82 : 1, la clase <code>007</code> es la mayoritaria con 8.3 %). Compara la columna "% de 007" entre los dos métodos: al azar, una partición chica como <code>test</code> puede quedar con bastante más o menos de lo que le toca.</p>
+  </div>
+  <div class="fig">
+    <svg id="lk-svg" viewBox="0 0 640 120" role="img" aria-label="Fuga entre pacientes"></svg>
+    <p class="cap"><b>Fuga entre pacientes.</b> El dataset no dice qué paciente hizo cada repetición. Las ~10 repeticiones de una misma sesión son casi idénticas entre sí; al barajarlas, unas caen en train y otras en test, así que el modelo "ya vio" a ese paciente. Las métricas son optimistas respecto a un paciente nuevo. No hay forma de evitarlo con los datos publicados; se documenta.</p>
+  </div>
+</section>
+
+<!-- ======================= 6 MÉTRICAS ======================= -->
+<section id="s6">
+  <div class="eyebrow">§ 6 · Evaluación</div>
+  <h2>Exactitud, recall, macro-F1 y la matriz de confusión</h2>
+  <div class="prose">
+    <p>La <b>matriz de confusión</b> es la tabla de "clase real (fila) vs clase predicha (columna)". Todo lo demás se lee de ella. Pasa el cursor por las celdas y haz clic en una clase para ver su recall, precisión y F1. Ejemplo con 4 de las 16 clases, las que el EDA dijo que se confunden.</p>
+  </div>
+  <div class="fig">
+    <div class="grid2">
+      <div class="scroll-x"><table class="cm" id="cm"></table></div>
+      <div>
+        <div class="metric-list" id="cm-global"></div>
+        <div class="readout" id="cm-class" style="margin-top:12px"></div>
+      </div>
+    </div>
+    <p class="cap"><b>Exactitud</b> = aciertos / total (la diagonal). <b>Recall</b> de una clase = de todas las repeticiones que <i>sí eran</i> esa clase, cuántas atrapó. <b>Precisión</b> = de todas las que <i>dijo</i> que eran esa clase, cuántas lo eran. <b>F1</b> = media armónica de las dos. <b>Macro-F1</b> = promedio simple del F1 de las 16 clases: cada clase pesa igual sin importar cuántas filas tenga, por eso se recomienda con desbalance. La <b>línea base</b> "predecir siempre la clase mayoritaria" da 8.3 % de exactitud: cualquier modelo tiene que superarla por mucho.</p>
+  </div>
+  <div class="cards">
+    <div class="card"><div class="t">Brecha train − test</div><p>Si train da 91 % y test 84 %, la brecha es 7 puntos: el modelo memorizó algo del train que no generaliza. Se acepta hasta 8 puntos.</p></div>
+    <div class="card"><div class="t">Curva de aprendizaje</div><p><code>J</code> en train y val por época. Ambas deben bajar; si val empieza a subir mientras train sigue bajando, hay sobreajuste.</p></div>
+    <div class="card"><div class="t">Ablación sensor 1 solo</div><p>Se entrena sin el guante para demostrar con números que los 12 canales valen la pena (72 % → 83 % en el sondeo).</p></div>
+  </div>
+</section>
+
+<!-- ======================= R² ======================= -->
+<section id="r2">
+  <div class="eyebrow">§ 6 · MSE y R² sobre one-hot</div>
+  <h2>Por qué R² ≈ 0.5 puede ir con 84 % de exactitud</h2>
+  <div class="prose">
+    <p>La rúbrica pide métricas de regresión, así que se calculan sobre las 16 salidas one-hot: <code>MSE = promedio de (Ŷ − Y)²</code> y <code>R² = 1 − SSE/SST</code>. Pero la salida lineal <b>no está acotada</b>: el modelo puede predecir 1.6 para la clase correcta. El <code>argmax</code> acierta igual, mientras que el MSE castiga ese 0.6 "sobrado" como si fuera un error. Mueve el slider.</p>
+  </div>
+  <div class="fig">
+    <div class="controls">
+      <label>Salida de la clase correcta <input type="range" id="r2-scale" min="20" max="200" value="100" step="5"> <span class="value" id="r2-scalev">1.00</span></label>
+    </div>
+    <div class="grid2">
+      <svg id="r2-svg" viewBox="0 0 520 220" role="img" aria-label="Predicción continua contra one-hot"></svg>
+      <div class="readout" id="r2-read"></div>
+    </div>
+    <p class="cap">Barras: la fila <code>Ŷᵢ</code> del modelo (azul) contra el one-hot real (contorno). Con 0.5 o con 1.8 la clase predicha es la misma; el MSE, no. Por eso se reportan las dos familias: clasificación (utilidad real) y regresión (lo que pide la rúbrica).</p>
+  </div>
+  <h3>Criterios de aceptación vs. lo que dio el sondeo</h3>
+  <div class="gauges" id="gauges"></div>
+</section>
+
+<!-- ======================= 8 SONDEO ======================= -->
+<section id="s8">
+  <div class="eyebrow">§ 8 · Sondeo que calibró la especificación</div>
+  <h2>Más ventanas no ayudan: el techo del modelo lineal está en ≈ 84 %</h2>
+  <div class="prose">
+    <p>Antes de escribir el código final se probaron varias configuraciones rápidas. La lectura clave está en la <b>distancia entre train y test</b>: al agregar ventanas, train sigue subiendo (más columnas = más capacidad de memorizar) pero test se estanca y luego <b>baja</b>. Eso es sobreajuste. Pasa el cursor por los puntos.</p>
+  </div>
+  <div class="fig">
+    <svg id="sd-svg" viewBox="0 0 720 300" role="img" aria-label="Exactitud train y test por configuración"></svg>
+    <div class="legend"><span style="--sw:var(--s1)">exactitud train</span><span style="--sw:var(--s2)">exactitud test</span></div>
+    <p class="cap">Sensor 1 solo se queda en 72 %; agregar el guante sube a 83 % (los ejercicios <code>005</code>–<code>007</code> son de mano). De 1 a 4 ventanas test no cambia; con 8 ventanas cae a 79 % mientras train sube a 93 %. La última fila es la configuración final con descenso de gradiente: 84.5 %.</p>
+  </div>
+  <div class="fig">
+    <svg id="rc-svg" viewBox="0 0 720 230" role="img" aria-label="Recall por clase en el sondeo"></svg>
+    <p class="cap">Recall por clase (4 ventanas, test). Las difíciles son justo los pares que el EDA (paso 13) encontró traslapados: <code>008</code>–<code>009</code> y <code>006</code>–<code>012</code>. Un modelo lineal con estos descriptores no los separa; para eso el documento propone descriptores de frecuencia o un modelo no lineal, no más columnas del mismo tipo.</p>
+  </div>
+</section>
+</main>
+</div>
+<div class="tip" id="tip"></div>
+
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s);
+const NS='http://www.w3.org/2000/svg';
+const REDUCED=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function S(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs){if(k==='text'){e.textContent=attrs[k];}else e.setAttribute(k,attrs[k]);}if(parent)parent.appendChild(e);return e;}
+function clear(el){while(el.firstChild)el.removeChild(el.firstChild);}
+function fmt(v,d){return (Math.round(v*Math.pow(10,d))/Math.pow(10,d)).toFixed(d);}
+function pad3(i){return String(i).padStart(3,'0');}
+const tip=$('#tip');
+function showTip(html,x,y){tip.innerHTML=html;tip.style.left=x+'px';tip.style.top=y+'px';tip.classList.add('on');}
+function hideTip(){tip.classList.remove('on');}
+function hover(el,fn){el.addEventListener('mousemove',e=>showTip(fn(),e.clientX,e.clientY-8));el.addEventListener('mouseleave',hideTip);}
+// deterministic rng
+function rng(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
+
+/* ---------------- hand-written statistics ---------------- */
+const ST={
+  sorted:x=>x.slice().sort((a,b)=>a-b),
+  mean:x=>x.reduce((a,b)=>a+b,0)/x.length,
+  median(x){const s=ST.sorted(x),n=s.length;return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2;},
+  modeInfo(x){const mn=Math.min(...x),mx=Math.max(...x);const B=20;if(mx===mn)return{value:mn,counts:[x.length],min:mn,width:0,idx:0};const w=(mx-mn)/B;const counts=new Array(B).fill(0);for(const v of x){let i=Math.floor((v-mn)/w);if(i>=B)i=B-1;counts[i]++;}let best=0;for(let i=1;i<B;i++)if(counts[i]>counts[best])best=i;return{value:mn+(best+0.5)*w,counts,min:mn,width:w,idx:best};},
+  mode:x=>ST.modeInfo(x).value,
+  std(x){const m=ST.mean(x);return Math.sqrt(x.reduce((a,v)=>a+(v-m)*(v-m),0)/x.length);},
+  var:x=>{const s=ST.std(x);return s*s;},
+  cv:x=>ST.std(x)/Math.max(Math.abs(ST.mean(x)),1),
+  min:x=>Math.min(...x), max:x=>Math.max(...x), range:x=>Math.max(...x)-Math.min(...x),
+  q1:x=>ST.sorted(x)[Math.floor(x.length/4)], q3:x=>ST.sorted(x)[Math.floor(3*x.length/4)],
+  iqr:x=>ST.q3(x)-ST.q1(x),
+  mad_diff(x){let s=0;for(let i=0;i<x.length-1;i++)s+=Math.abs(x[i+1]-x[i]);return s/(x.length-1);},
+  rms:x=>Math.sqrt(x.reduce((a,v)=>a+v*v,0)/x.length)
+};
+const STATS=[
+ {k:'mean',def:'Σxᵢ / n',d:'Promedio. Dónde "vive" la señal en esa ventana (p. ej. ángulo medio de flexión).'},
+ {k:'median',def:'x₍n/2₎ del vector ordenado',d:'El valor del centro tras ordenar. No le afectan los extremos como a la media.'},
+ {k:'mode',def:'centro del bin más lleno (20 bins)',d:'El valor "más frecuente" aproximado por histograma. Empate → bin más bajo.'},
+ {k:'std',def:'√( Σ(xᵢ − mean)² / n )',d:'Desviación estándar poblacional (ddof = 0): qué tanto se aleja la señal de su media.'},
+ {k:'var',def:'std²',d:'La misma dispersión, sin la raíz.'},
+ {k:'cv',def:'std / máx(|mean|, 1)',d:'Dispersión relativa a la magnitud. El denominador se acota a 1° para que no explote con media ≈ 0.'},
+ {k:'min',def:'x₍₁₎',d:'Valor más bajo de la ventana.'},
+ {k:'max',def:'x₍ₙ₎',d:'Valor más alto de la ventana.'},
+ {k:'range',def:'max − min',d:'Amplitud del recorrido articular en esa ventana.'},
+ {k:'q1',def:'x₍⌊n/4⌋₎',d:'Primer cuartil: método "índice inferior", sin interpolar.'},
+ {k:'q3',def:'x₍⌊3n/4⌋₎',d:'Tercer cuartil, mismo método.'},
+ {k:'iqr',def:'q3 − q1',d:'Rango intercuartil: dónde está el 50 % central de los valores.'},
+ {k:'mad_diff',def:'Σ|xᵢ₊₁ − xᵢ| / (n − 1)',d:'Cambio promedio de un paso al siguiente: velocidad angular media en °/paso. Único estadístico que usa el orden temporal.'},
+ {k:'rms',def:'√( Σxᵢ² / n )',d:'Raíz de la media de los cuadrados. Parecido a std pero medido desde 0, no desde la media. Lo usa el artículo original.'}
+];
+
+/* ---------------- 3.3 name builder ---------------- */
+(function(){
+  const CH={1:[['pitch1','pitch de la IMU 1 (S1/S3)'],['yaw1','yaw de la IMU 1'],['roll1','roll de la IMU 1'],['pitch2','pitch de la IMU 2 (S2/S4)'],['yaw2','yaw de la IMU 2'],['roll2','roll de la IMU 2']],
+            2:[['f1','flexión del dedo 1 (pulgar)'],['f2','flexión del dedo 2'],['f3','flexión del dedo 3'],['f4','flexión del dedo 4'],['f5','flexión del dedo 5'],['pitch3','pitch del guante']]};
+  const WD={0:'toda la señal útil',1:'el primer cuarto de la señal útil',2:'el segundo cuarto de la señal útil',3:'el tercer cuarto de la señal útil',4:'el último cuarto de la señal útil'};
+  const sel=$('#nb-sensor'),ch=$('#nb-chan'),win=$('#nb-win'),st=$('#nb-stat');
+  STATS.forEach(s=>{const o=document.createElement('option');o.value=s.k;o.textContent=s.k;st.appendChild(o);});
+  st.value='median';
+  function fillCh(){clear(ch);CH[sel.value].forEach(([v,l])=>{const o=document.createElement('option');o.value=v;o.textContent=v+' · '+l;ch.appendChild(o);});}
+  function render(){
+    const c=ch.value,w=win.value,s=st.value;
+    $('#nb-out').innerHTML=`<span class="p1">s${sel.value}</span>_<span class="p2">${c}</span>_<span class="p3">w${w}</span>_<span class="p4">${s}</span>`;
+    const chd=CH[sel.value].find(x=>x[0]===c)[1];const sd=STATS.find(x=>x.k===s);
+    $('#nb-desc').textContent=`Es el ${s} (${sd.def}) del canal "${chd}", calculado sobre ${WD[w]}, medido por el sensor ${sel.value===1||sel.value==='1'?'de la IMU del miembro':'del guante'}.`;
+  }
+  sel.addEventListener('change',()=>{fillCh();render();});
+  [ch,win,st].forEach(e=>e.addEventListener('change',render));
+  fillCh();ch.value='pitch1';render();
+})();
+
+/* ---------------- 3.3 stats explorer ---------------- */
+(function(){
+  let cur='mean',x=[];let seed=11;
+  function gen(){const r=rng(seed++);const n=24;x=[];for(let i=0;i<n;i++){const t=i/(n-1);x.push(Math.round((38*Math.sin(Math.PI*t)*(0.7+0.3*Math.sin(3*t))+(r()-0.5)*10-4)*10)/10);}}
+  gen();
+  const chips=$('#st-chips');
+  STATS.forEach(s=>{const b=document.createElement('button');b.className='chip';b.textContent=s.k;b.setAttribute('aria-pressed',s.k===cur);b.addEventListener('click',()=>{cur=s.k;[...chips.children].forEach(c=>c.setAttribute('aria-pressed',c.textContent===cur));draw();});chips.appendChild(b);});
+  $('#st-regen').addEventListener('click',()=>{gen();draw();});
+  $('#st-test').addEventListener('click',()=>{x=[1,2,2,3,10];draw();});
+  const svg=$('#st-svg');
+  function draw(){
+    clear(svg);const n=x.length;
+    const mn=Math.min(...x),mx=Math.max(...x),pad=(mx-mn)*0.15||1;
+    const y0=mn-pad,y1=mx+pad;
+    // top plot
+    const L=44,R=620,T=14,B=170;
+    const sx=i=>L+(R-L)*(n===1?0.5:i/(n-1)),sy=v=>B-(B-T)*(v-y0)/(y1-y0);
+    S('line',{x1:L,y1:B,x2:R,y2:B,class:'axis'},svg);S('line',{x1:L,y1:T,x2:L,y2:B,class:'axis'},svg);
+    for(let k=0;k<=3;k++){const v=y0+(y1-y0)*k/3;const yy=sy(v);S('line',{x1:L,y1:yy,x2:R,y2:yy,class:'gridl'},svg);S('text',{x:L-6,y:yy+4,'text-anchor':'end',class:'mono muted',text:fmt(v,0)},svg);}
+    S('text',{x:L,y:T-2,class:'muted',text:'valor (°) en orden temporal, n = '+n},svg);
+    const m=ST.mean(x);
+    // overlays before points
+    const info={};
+    const hl=v=>{const yy=sy(v);S('line',{x1:L,y1:yy,x2:R,y2:yy,stroke:'var(--s2)','stroke-width':2,'stroke-dasharray':'6 4'},svg);return yy;};
+    if(cur==='mean'){const yy=hl(m);S('text',{x:R,y:yy-6,'text-anchor':'end',fill:'var(--s2)',text:'mean = '+fmt(m,2)},svg);}
+    if(cur==='std'||cur==='var'||cur==='cv'){const yy=hl(m);S('text',{x:R,y:yy-6,'text-anchor':'end',fill:'var(--s2)',text:'mean = '+fmt(m,2)},svg);x.forEach((v,i)=>S('line',{x1:sx(i),y1:yy,x2:sx(i),y2:sy(v),stroke:'var(--s2)','stroke-width':2,opacity:.7},svg));}
+    if(cur==='rms'){const yy=sy(0);if(yy>=T&&yy<=B){S('line',{x1:L,y1:yy,x2:R,y2:yy,stroke:'var(--muted)','stroke-width':1.5},svg);S('text',{x:R,y:yy-6,'text-anchor':'end',class:'muted',text:'0 (rms mide desde aquí)'},svg);}x.forEach((v,i)=>S('line',{x1:sx(i),y1:Math.min(Math.max(sy(0),T),B),x2:sx(i),y2:sy(v),stroke:'var(--s2)','stroke-width':2,opacity:.7},svg));const rr=sy(ST.rms(x));S('line',{x1:L,y1:rr,x2:R,y2:rr,stroke:'var(--s3)','stroke-width':2,'stroke-dasharray':'6 4'},svg);S('text',{x:L+4,y:rr-6,fill:'var(--s3)',text:'rms = '+fmt(ST.rms(x),2)},svg);}
+    if(cur==='mad_diff'){for(let i=0;i<n-1;i++){S('line',{x1:sx(i),y1:sy(x[i]),x2:sx(i+1),y2:sy(x[i+1]),stroke:'var(--s2)','stroke-width':3},svg);S('line',{x1:sx(i+1),y1:sy(x[i]),x2:sx(i+1),y2:sy(x[i+1]),stroke:'var(--s4)','stroke-width':2},svg);}S('text',{x:R,y:T+10,'text-anchor':'end',fill:'var(--s4)',text:'|xᵢ₊₁ − xᵢ| en amarillo'},svg);}
+    if(cur==='min'||cur==='max'||cur==='range'){const iMin=x.indexOf(mn),iMax=x.indexOf(mx);if(cur!=='max'){hl(mn);S('circle',{cx:sx(iMin),cy:sy(mn),r:9,fill:'none',stroke:'var(--s2)','stroke-width':2},svg);}if(cur!=='min'){hl(mx);S('circle',{cx:sx(iMax),cy:sy(mx),r:9,fill:'none',stroke:'var(--s2)','stroke-width':2},svg);}if(cur==='range'){S('line',{x1:R-14,y1:sy(mn),x2:R-14,y2:sy(mx),stroke:'var(--s3)','stroke-width':3},svg);S('text',{x:R-20,y:(sy(mn)+sy(mx))/2+4,'text-anchor':'end',fill:'var(--s3)',text:'range = '+fmt(mx-mn,2)},svg);}}
+    if(cur==='median'){const yy=hl(ST.median(x));S('text',{x:R,y:yy-6,'text-anchor':'end',fill:'var(--s2)',text:'median = '+fmt(ST.median(x),2)},svg);}
+    if(cur==='q1'||cur==='q3'||cur==='iqr'){const q1=ST.q1(x),q3=ST.q3(x);if(cur==='iqr'){S('rect',{x:L,y:sy(q3),width:R-L,height:sy(q1)-sy(q3),fill:'var(--s3)',opacity:.18},svg);}if(cur!=='q3'){const yy=hl(q1);S('text',{x:R,y:yy+14,'text-anchor':'end',fill:'var(--s2)',text:'q1 = '+fmt(q1,2)},svg);}if(cur!=='q1'){const yy=hl(q3);S('text',{x:R,y:yy-6,'text-anchor':'end',fill:'var(--s2)',text:'q3 = '+fmt(q3,2)},svg);}}
+    if(cur==='mode'){const mi=ST.modeInfo(x);const lo=mi.min+mi.idx*mi.width,hi=lo+mi.width;S('rect',{x:L,y:sy(hi),width:R-L,height:Math.max(2,sy(lo)-sy(hi)),fill:'var(--s2)',opacity:.25},svg);const yy=hl(mi.value);S('text',{x:R,y:yy-6,'text-anchor':'end',fill:'var(--s2)',text:'mode = '+fmt(mi.value,2)+' (centro del bin)'},svg);}
+    // series
+    let d='';x.forEach((v,i)=>{d+=(i?'L':'M')+sx(i)+','+sy(v);});
+    S('path',{d,fill:'none',stroke:'var(--s1)','stroke-width':2},svg);
+    x.forEach((v,i)=>{const c=S('circle',{cx:sx(i),cy:sy(v),r:4,fill:'var(--s1)',stroke:'var(--surface)','stroke-width':2},svg);hover(c,()=>`x[${i}] = ${v}`);});
+    // sorted strip
+    const ST_Y=250;S('line',{x1:L,y1:ST_Y,x2:R,y2:ST_Y,class:'axis'},svg);
+    S('text',{x:L,y:ST_Y-30,class:'muted',text:'los mismos valores, ordenados de menor a mayor  (x₍₁₎ … x₍ₙ₎)'},svg);
+    const vx=v=>L+(R-L)*(v-y0)/(y1-y0);
+    const s=ST.sorted(x);
+    if(cur==='mode'){const mi=ST.modeInfo(x);const maxc=Math.max(...mi.counts);mi.counts.forEach((c,i)=>{const lo=mi.min+i*mi.width;const w=vx(lo+mi.width)-vx(lo);const h=c/maxc*26;S('rect',{x:vx(lo)+1,y:ST_Y-6-h,width:Math.max(1,w-2),height:h,rx:2,fill:i===mi.idx?'var(--s2)':'var(--line-2)'},svg);});S('text',{x:R,y:ST_Y+22,'text-anchor':'end',class:'muted',text:'histograma de 20 bins entre mín y máx'},svg);}
+    const hlIdx=new Set();
+    if(cur==='median'){if(n%2)hlIdx.add((n-1)/2);else{hlIdx.add(n/2-1);hlIdx.add(n/2);}}
+    if(cur==='q1'||cur==='iqr')hlIdx.add(Math.floor(n/4));
+    if(cur==='q3'||cur==='iqr')hlIdx.add(Math.floor(3*n/4));
+    if(cur==='min'||cur==='range')hlIdx.add(0);
+    if(cur==='max'||cur==='range')hlIdx.add(n-1);
+    s.forEach((v,i)=>{const on=hlIdx.has(i);const c=S('circle',{cx:vx(v),cy:ST_Y,r:on?7:4,fill:on?'var(--s2)':'var(--s1)',stroke:'var(--surface)','stroke-width':2},svg);hover(c,()=>`x₍${i+1}₎ = ${v} (índice ${i})`);if(on)S('text',{x:vx(v),y:ST_Y+24,'text-anchor':'middle',class:'mono',fill:'var(--s2)',text:'['+i+']'},svg);});
+    S('text',{x:L-6,y:ST_Y+4,'text-anchor':'end',class:'mono muted',text:fmt(y0,0)},svg);S('text',{x:R+2,y:ST_Y+4,class:'mono muted',text:''},svg);
+    // readout
+    const sd=STATS.find(q=>q.k===cur);const val=ST[cur](x);
+    let extra='';
+    if(cur==='cv')extra=`<p>std = ${fmt(ST.std(x),3)}; |mean| = ${fmt(Math.abs(m),3)} → denominador = máx(|mean|, 1) = ${fmt(Math.max(Math.abs(m),1),3)}</p>`;
+    if(cur==='q1'||cur==='q3')extra=`<p>n = ${n} → índice ⌊${cur==='q1'?'n/4':'3n/4'}⌋ = ${cur==='q1'?Math.floor(n/4):Math.floor(3*n/4)}</p>`;
+    if(cur==='median')extra=`<p>n = ${n} (${n%2?'impar: el del centro':'par: promedio de los dos centrales'})</p>`;
+    if(cur==='mode'){const mi=ST.modeInfo(x);extra=`<p>ancho de bin = (max − min)/20 = ${fmt(mi.width,3)}; bin ganador = ${mi.idx} con ${mi.counts[mi.idx]} valores</p>`;}
+    if(cur==='mad_diff')extra=`<p>${n-1} diferencias consecutivas, promediadas</p>`;
+    $('#st-read').innerHTML=`<div class="mono" style="color:var(--accent-ink)">${cur}</div><div class="big">${fmt(val,3)}</div><div class="def">${sd.def}</div><p>${sd.d}</p>${extra}`;
+  }
+  draw();
+})();
+
+/* ---------------- 3.4 windows ---------------- */
+(function(){
+  const svg=$('#w-svg');const mode=$('#w-mode'),l1=$('#w-l1'),l2=$('#w-l2');
+  function signal(L,seed,amp){const r=rng(seed);const out=new Array(880).fill(0);for(let i=0;i<L;i++){const t=i/L;out[i]=amp*Math.sin(2*Math.PI*t*2.2)*(0.5+0.5*Math.sin(Math.PI*t))+(r()-0.5)*6;}return out;}
+  const COL=['var(--s1)','var(--s2)','var(--s3)','var(--s4)'];
+  function drawSensor(yTop,L,name,seed,amp){
+    const X0=60,X1=880;const h=110;const mid=yTop+h/2;
+    const sx=i=>X0+(X1-X0)*i/880;const sy=v=>mid-v*(h/2-8)/amp;
+    const sig=signal(L,seed,amp);
+    S('text',{x:X0,y:yTop-4,class:'ink',style:'font-weight:600',text:name+'  ·  L = '+L+' pasos útiles ('+fmt(L/50,1)+' s)'},svg);
+    // edges
+    let edges;if(mode.value==='util'){edges=[0,1,2,3,4].map(k=>Math.round(k*L/4));}else{edges=[0,220,440,660,880];}
+    for(let k=0;k<4;k++){
+      const a=edges[k],b=edges[k+1];
+      const seg=sig.slice(a,b);const allZero=seg.length&&seg.every(v=>v===0);const partZero=b>L&&!allZero;
+      S('rect',{x:sx(a),y:yTop,width:Math.max(0,sx(b)-sx(a)),height:h,fill:COL[k],opacity:.14},svg);
+      const mean=seg.length?ST.mean(seg):0;
+      const lbl=S('text',{x:(sx(a)+sx(b))/2,y:yTop+h+16,'text-anchor':'middle',class:'mono',fill:allZero?'var(--crit)':'var(--ink-2)',text:`w${k+1}: mean ${fmt(mean,1)}`+(allZero?'  ← todo relleno':(partZero?'  (mezcla)':''))},svg);
+      lbl.style.fontSize='11.5px';
+    }
+    edges.forEach((e,k)=>{S('line',{x1:sx(e),y1:yTop,x2:sx(e),y2:yTop+h+4,stroke:'var(--ink-2)','stroke-width':1,'stroke-dasharray':k===0||k===4?'':'3 3'},svg);S('text',{x:sx(e),y:yTop+h+30,'text-anchor':'middle',class:'mono muted',text:'e'+k+'='+e},svg);});
+    // padding zone
+    if(L<880){S('rect',{x:sx(L),y:yTop,width:sx(880)-sx(L),height:h,fill:'var(--muted)',opacity:.12},svg);S('line',{x1:sx(L),y1:yTop,x2:sx(L),y2:yTop+h,stroke:'var(--muted)','stroke-width':1.5},svg);}
+    S('line',{x1:X0,y1:mid,x2:X1,y2:mid,class:'gridl'},svg);
+    let d='';for(let i=0;i<880;i+=2){d+=(i?'L':'M')+fmt(sx(i),1)+','+fmt(sy(sig[i]),1);}
+    S('path',{d,fill:'none',stroke:'var(--ink)','stroke-width':1.4},svg);
+    S('text',{x:X0-6,y:mid+4,'text-anchor':'end',class:'mono muted',text:'0°'},svg);
+  }
+  function draw(){clear(svg);$('#w-l1v').textContent=l1.value;$('#w-l2v').textContent=l2.value;
+    drawSensor(24,+l1.value,'sensor 1 · pitch1',3,40);drawSensor(194,+l2.value,'sensor 2 · f3',9,30);
+    S('text',{x:880,y:322,'text-anchor':'end',class:'muted',text:'880 pasos = 17.6 s'},svg);
+  }
+  [mode,l1,l2].forEach(e=>e.addEventListener('input',draw));draw();
+})();
+
+/* ---------------- 4.1 model ---------------- */
+(function(){
+  const svg=$('#m-svg');const cls=$('#m-cls'),noise=$('#m-noise');let seed=5;
+  const NAMES=['ball gripping','cyl. grip','fingers','wrist ext.','wrist flex.','pinch','hand open','power grip','elbow flex.','elbow ext.','shoulder abd.','shoulder flex.','forearm pron.','knee ext.','knee flex.','hip abd.'];
+  function draw(){
+    clear(svg);const c=+cls.value;$('#m-clsv').textContent=pad3(c);const r=rng(seed*100+c);
+    const nz=noise.value/100;
+    const yhat=[];for(let j=0;j<16;j++){let v=(r()-0.4)*1.1*nz;if(j===c)v=0.85+(r()-0.5)*0.3;if(Math.abs(j-c)===1)v+=0.25*nz;yhat.push(v);}
+    let am=0;yhat.forEach((v,j)=>{if(v>yhat[am])am=j;});
+    // X row
+    const X0=10,Y0=40;S('text',{x:X0,y:Y0-14,class:'ink',style:'font-weight:600',text:'fila i de X  (1 × 843)'},svg);
+    const cells=13;const cw=16;
+    for(let k=0;k<cells;k++){const v=k===cells-1?1:r()*2-1;const col=k===cells-1?'var(--s7)':`rgba(42,120,214,${0.15+0.7*Math.abs(v)})`;S('rect',{x:X0+k*(cw+2),y:Y0,width:cw,height:cw,rx:2,fill:col},svg);}
+    S('text',{x:X0+8*(cw+2),y:Y0+cw+16,class:'mono muted',text:'…  842 z-scores  +  1 (sesgo)'},svg);
+    S('text',{x:X0+(cells-1)*(cw+2)+cw/2,y:Y0-2,'text-anchor':'middle',class:'mono',fill:'var(--s7)',text:'1'},svg);
+    // times
+    S('text',{x:X0+cells*(cw+2)+18,y:Y0+13,class:'ink',style:'font-size:20px',text:'×'},svg);
+    // W block
+    const WX=X0+cells*(cw+2)+50,WY=18;const ww=9,wh=8;
+    S('text',{x:WX,y:WY-4,class:'ink',style:'font-weight:600',text:'W  (843 × 16)'},svg);
+    const rw=rng(99);
+    for(let i=0;i<12;i++)for(let j=0;j<16;j++){const v=rw()*2-1;S('rect',{x:WX+j*(ww+1),y:WY+i*(wh+1),width:ww,height:wh,fill:v>0?`rgba(42,120,214,${0.15+0.6*Math.abs(v)})`:`rgba(235,104,52,${0.15+0.6*Math.abs(v)})`},svg);}
+    S('text',{x:WX,y:WY+12*(wh+1)+12,class:'mono muted',text:'⋮ una columna de pesos por clase'},svg);
+    S('rect',{x:WX+c*(ww+1)-1,y:WY-1,width:ww+2,height:12*(wh+1)+1,fill:'none',stroke:'var(--ink)','stroke-width':1.2},svg);
+    S('text',{x:WX+c*(ww+1)+ww/2,y:WY+12*(wh+1)+26,'text-anchor':'middle',class:'mono',fill:'var(--ink)',text:'w_'+pad3(c)},svg);
+    // equals
+    S('text',{x:WX+16*(ww+1)+16,y:Y0+13,class:'ink',style:'font-size:20px',text:'='},svg);
+    // Ŷ bars
+    const BX=WX+16*(ww+1)+46,BW=420,base=150,scale=70;
+    S('text',{x:BX,y:14,class:'ink',style:'font-weight:600',text:'Ŷᵢ = Xᵢ·W  (1 × 16 salidas continuas)  →  argmax'},svg);
+    S('line',{x1:BX,y1:base,x2:BX+BW,y2:base,class:'axis'},svg);
+    S('line',{x1:BX,y1:base-scale,x2:BX+BW,y2:base-scale,class:'gridl'},svg);S('text',{x:BX-4,y:base-scale+4,'text-anchor':'end',class:'mono muted',text:'1'},svg);S('text',{x:BX-4,y:base+4,'text-anchor':'end',class:'mono muted',text:'0'},svg);
+    const bw=BW/16;
+    yhat.forEach((v,j)=>{const h=v*scale;const y=v>=0?base-h:base;const rect=S('rect',{x:BX+j*bw+3,y,width:bw-6,height:Math.abs(h),rx:2,fill:j===am?'var(--s1)':'var(--line-2)'},svg);hover(rect,()=>`Ŷᵢ[${pad3(j)}] = ${fmt(v,2)}`);
+      // Y one-hot below
+      S('rect',{x:BX+j*bw+3,y:base+34,width:bw-6,height:14,rx:2,fill:j===c?'var(--s2)':'var(--surface-2)',stroke:'var(--line-2)','stroke-width':1},svg);
+      S('text',{x:BX+j*bw+bw/2,y:base+45,'text-anchor':'middle',class:'mono',fill:j===c?'#fff':'var(--muted)',style:'font-size:10px',text:j===c?'1':'0'},svg);
+      S('text',{x:BX+j*bw+bw/2,y:base+16,'text-anchor':'middle',class:'mono muted',style:'font-size:10px',text:pad3(j)},svg);
+    });
+    S('text',{x:BX,y:base+62+8,class:'mono',fill:'var(--s2)',text:'Yᵢ (one-hot real)'},svg);
+    S('text',{x:BX+am*bw+bw/2,y:base-Math.max(0,yhat[am])*scale-8,'text-anchor':'middle',class:'mono',fill:'var(--s1)',text:'argmax → '+pad3(am)},svg);
+    const ok=am===c;const mse=yhat.reduce((a,v,j)=>a+(v-(j===c?1:0))**2,0)/16;
+    $('#m-cap').innerHTML=`Clase real <code>${pad3(c)}</code> (${NAMES[c]}). Predicha: <code>${pad3(am)}</code> → <b style="color:${ok?'var(--good-ink)':'var(--crit)'}">${ok?'acierta':'falla'}</b>. Error cuadrático medio de esta fila: <span class="value">${fmt(mse,3)}</span>. Sube el ruido para ver cómo una salida "vecina" puede robarle el argmax a la clase correcta.`;
+  }
+  [cls,noise].forEach(e=>e.addEventListener('input',draw));$('#m-shuffle').addEventListener('click',()=>{seed++;draw();});draw();
+})();
+
+/* ---------------- 4.2 gradient descent ---------------- */
+(function(){
+  const LMAX=110,LMIN=3;const svg=$('#gd-svg'),jsvg=$('#gd-j');const al=$('#gd-alpha');
+  const A_MIN=0.0005,A_MAX=0.08;
+  function alphaOf(p){return A_MIN*Math.pow(A_MAX/A_MIN,p/100);}
+  function pOf(a){return 100*Math.log(a/A_MIN)/Math.log(A_MAX/A_MIN);}
+  const W0=[0.17,0.95];
+  function J(w){return 0.5*(LMAX*w[0]*w[0]+LMIN*w[1]*w[1]);}
+  let timer=null;
+  function run(){
+    if(timer){clearInterval(timer);timer=null;}
+    const a=alphaOf(+al.value);$('#gd-alphav').textContent=fmt(a,4)+'   (α·λ_max = '+fmt(a*LMAX,2)+')';
+    const path=[W0.slice()];const js=[J(W0)];let w=W0.slice();
+    for(let t=0;t<60;t++){w=[w[0]*(1-a*LMAX),w[1]*(1-a*LMIN)];path.push(w.slice());js.push(J(w));if(Math.abs(w[0])>50)break;}
+    const diverge=a*LMAX>2;
+    drawContours();drawJAxes(js,a);
+    let k=0;
+    const step=()=>{k++;drawPath(path.slice(0,k+1));drawJ(js.slice(0,k+1),js,a);if(k>=path.length-1){clearInterval(timer);timer=null;}};
+    if(REDUCED){k=path.length-1;drawPath(path);drawJ(js,js,a);}else{timer=setInterval(step,70);}
+    const f=1-a*LMAX;
+    $('#gd-cap').innerHTML=diverge?`<b style="color:var(--crit)">Diverge.</b> Factor por paso en la dirección empinada: (1 − α·λ_max) = ${fmt(f,2)}. Cada época multiplica el error por |${fmt(f,2)}| &gt; 1: el peso salta de un lado al otro del valle, cada vez más lejos.`:
+      (Math.abs(f)<1e-9?`<b style="color:var(--good-ink)">α = 1/λ_max.</b> En la dirección empinada el factor es exactamente 0: un solo paso y quedas en el fondo de ese eje. En la dirección plana el factor es (1 − α·λ_min) = ${fmt(1-a*LMIN,3)}: converge, despacio pero seguro.`:
+      `<b style="color:var(--good-ink)">Converge.</b> Factor en la dirección empinada: ${fmt(f,2)} (|·| &lt; 1). ${Math.abs(f)>0.5?'Cerca del límite 2/λ_max: oscila de lado a lado antes de asentarse.':''} Dirección plana: ${fmt(1-a*LMIN,3)} por paso.`);
+  }
+  // contour axes: w1 in [-0.3,0.3] horizontally, w2 in [-1.1,1.1] vertically
+  const CX=210,CY=170,SX=210/0.32,SY=150/1.15;
+  const px=w=>CX+w[0]*SX,py=w=>CY-w[1]*SY;
+  function drawContours(){clear(svg);
+    S('rect',{x:0,y:0,width:420,height:340,fill:'var(--surface)'},svg);
+    const clip=S('clipPath',{id:'gdclip'},svg);S('rect',{x:0,y:0,width:420,height:340},clip);
+    const g=S('g',{'clip-path':'url(#gdclip)'},svg);
+    const levels=[0.02,0.08,0.2,0.45,0.8,1.3,2,3];
+    levels.forEach((c,i)=>{const rx=Math.sqrt(2*c/LMAX)*SX,ry=Math.sqrt(2*c/LMIN)*SY;S('ellipse',{cx:CX,cy:CY,rx,ry,fill:'none',stroke:'var(--s1)','stroke-width':1,opacity:0.25+0.5*(1-i/levels.length)},g);});
+    S('line',{x1:0,y1:CY,x2:420,y2:CY,class:'gridl'},g);S('line',{x1:CX,y1:0,x2:CX,y2:340,class:'gridl'},g);
+    S('circle',{cx:CX,cy:CY,r:4,fill:'var(--s3)'},svg);S('text',{x:CX+8,y:CY-8,fill:'var(--s3)',text:'mínimo W*'},svg);
+    S('text',{x:412,y:CY-6,'text-anchor':'end',class:'muted',text:'dirección empinada (λ = 110)'},svg);
+    S('text',{x:CX+8,y:14,class:'muted',text:'dirección plana (λ = 3)'},svg);
+  }
+  function drawPath(p){const old=svg.querySelector('#gdpath');if(old)old.remove();const g=S('g',{id:'gdpath','clip-path':'url(#gdclip)'},svg);let d='';p.forEach((w,i)=>{d+=(i?'L':'M')+fmt(px(w),1)+','+fmt(py(w),1);});S('path',{d,fill:'none',stroke:'var(--s2)','stroke-width':2},g);p.forEach((w,i)=>S('circle',{cx:px(w),cy:py(w),r:i===0?5:3,fill:i===0?'var(--ink)':'var(--s2)'},g));if(p.length)S('text',{x:px(p[0])+8,y:py(p[0])+4,class:'ink',text:'W = inicio'},g);}
+  let jx,jy;
+  function drawJAxes(js,a){clear(jsvg);S('rect',{x:0,y:0,width:420,height:340,fill:'var(--surface)'},jsvg);
+    const L=48,R=408,T=20,B=300;const n=js.length;const maxJ=Math.min(Math.max(...js),J(W0)*3);
+    jx=i=>L+(R-L)*i/Math.max(1,n-1);jy=v=>B-(B-T)*Math.min(v,maxJ)/maxJ;
+    S('line',{x1:L,y1:B,x2:R,y2:B,class:'axis'},jsvg);S('line',{x1:L,y1:T,x2:L,y2:B,class:'axis'},jsvg);
+    for(let k=0;k<=4;k++){const v=maxJ*k/4;S('line',{x1:L,y1:jy(v),x2:R,y2:jy(v),class:'gridl'},jsvg);S('text',{x:L-6,y:jy(v)+4,'text-anchor':'end',class:'mono muted',text:fmt(v,2)},jsvg);}
+    S('text',{x:L,y:T-6,class:'muted',text:'J por época (recortado arriba)'},jsvg);S('text',{x:R,y:B+22,'text-anchor':'end',class:'muted',text:'época → ('+(n-1)+' mostradas)'},jsvg);
+  }
+  function drawJ(p,all,a){const old=jsvg.querySelector('#jpath');if(old)old.remove();const g=S('g',{id:'jpath'},jsvg);let d='';p.forEach((v,i)=>{d+=(i?'L':'M')+fmt(jx(i),1)+','+fmt(jy(v),1);});S('path',{d,fill:'none',stroke:'var(--s2)','stroke-width':2},g);const last=p[p.length-1];const i=p.length-1;S('circle',{cx:jx(i),cy:jy(last),r:4,fill:'var(--s2)'},g);
+    if(a*LMAX>2&&p.length===all.length)S('text',{x:jx(i)-6,y:jy(last)+16,'text-anchor':'end',fill:'var(--crit)',text:'J → ∞'},g);
+    else if(p.length===all.length)S('text',{x:jx(i)-6,y:jy(last)-8,'text-anchor':'end',fill:'var(--ink)',text:'J = '+fmt(last,4)},g);}
+  al.addEventListener('input',()=>{const a=alphaOf(+al.value);$('#gd-alphav').textContent=fmt(a,4)+'   (α·λ_max = '+fmt(a*LMAX,2)+')';});
+  $('#gd-run').addEventListener('click',run);
+  $('#gd-a1').addEventListener('click',()=>{al.value=pOf(1/LMAX);run();});
+  $('#gd-a2').addEventListener('click',()=>{al.value=pOf(0.05);run();});
+  al.value=pOf(1/LMAX);run();
+})();
+
+/* ---------------- power iteration ---------------- */
+(function(){
+  const svg=$('#pi-svg');const th=Math.PI/6;const c=Math.cos(th),s=Math.sin(th);
+  const L1=110,L2=3;
+  // A = R diag(L1,L2) R^T
+  const A=[[c*c*L1+s*s*L2,c*s*(L1-L2)],[c*s*(L1-L2),s*s*L1+c*c*L2]];
+  let v,k,hist,seedN=1;
+  function mul(v){return[A[0][0]*v[0]+A[0][1]*v[1],A[1][0]*v[0]+A[1][1]*v[1]];}
+  function norm(v){return Math.hypot(v[0],v[1]);}
+  function reset(){const r=rng(seedN++*7);const ang=r()*Math.PI*2;v=[Math.cos(ang),Math.sin(ang)];// avoid too close to eigenvector
+    k=0;hist=[];draw();}
+  function step(){const Av=mul(v);const n=norm(Av);v=[Av[0]/n,Av[1]/n];k++;hist.push(n);}
+  const C=170,R=120;
+  function draw(){clear(svg);S('rect',{x:0,y:0,width:340,height:340,fill:'var(--surface)'},svg);
+    S('circle',{cx:C,cy:C,r:R,fill:'none',class:'gridl'},svg);S('line',{x1:20,y1:C,x2:320,y2:C,class:'gridl'},svg);S('line',{x1:C,y1:20,x2:C,y2:320,class:'gridl'},svg);
+    // ellipse of A applied to unit circle (scaled down)
+    const ex=R/L1*1;let d='';for(let i=0;i<=72;i++){const a=i/72*Math.PI*2;const u=[Math.cos(a),Math.sin(a)];const w=mul(u);d+=(i?'L':'M')+fmt(C+w[0]*ex,1)+','+fmt(C-w[1]*ex,1);}
+    S('path',{d,fill:'var(--s1)',opacity:.08,stroke:'var(--s1)','stroke-width':1},svg);
+    // dominant eigenvector
+    S('line',{x1:C-c*R*1.15,y1:C+s*R*1.15,x2:C+c*R*1.15,y2:C-s*R*1.15,stroke:'var(--muted)','stroke-width':1.5,'stroke-dasharray':'5 4'},svg);
+    S('text',{x:C+c*R*1.15+4,y:C-s*R*1.15-4,class:'muted',text:'eigenvector de λ_max'},svg);
+    // Av (unnormalized, scaled)
+    const Av=mul(v);S('line',{x1:C,y1:C,x2:C+Av[0]*ex,y2:C-Av[1]*ex,stroke:'var(--s2)','stroke-width':2},svg);S('text',{x:C+Av[0]*ex+4,y:C-Av[1]*ex+4,fill:'var(--s2)',text:'A·v'},svg);
+    // v
+    S('line',{x1:C,y1:C,x2:C+v[0]*R,y2:C-v[1]*R,stroke:'var(--s1)','stroke-width':3},svg);S('circle',{cx:C+v[0]*R,cy:C-v[1]*R,r:5,fill:'var(--s1)'},svg);S('text',{x:C+v[0]*R+8,y:C-v[1]*R-8,fill:'var(--s1)',style:'font-weight:600',text:'v'},svg);
+    S('text',{x:24,y:330,class:'muted',text:'elipse azul: A aplicada al círculo unitario (escalada)'},svg);
+    const est=norm(Av);const ang=Math.abs(Math.atan2(v[1],v[0])-th);const angDeg=Math.min(ang,Math.PI-ang)*180/Math.PI;
+    $('#pi-read').innerHTML=`<div class="mono" style="color:var(--accent-ink)">iteración k = ${k}</div><div class="big">λ_max ≈ ${fmt(est,2)}</div><div class="def">‖A·v‖ con v normalizado</div><p>Valor real: 110. Ángulo entre v y el eigenvector: <span class="value">${fmt(angDeg,2)}°</span>.</p><p style="margin-top:6px">Cada iteración multiplica la componente "buena" por 110 y la otra por 3: la proporción entre ambas se reduce ×${fmt(L1/L2,1)} por paso. Por eso converge tan rápido.</p>${hist.length?`<p style="margin-top:6px" class="mono">estimaciones: ${hist.slice(-6).map(h=>fmt(h,1)).join(' → ')}</p>`:''}`;
+  }
+  $('#pi-step').addEventListener('click',()=>{step();draw();});
+  $('#pi-ten').addEventListener('click',()=>{for(let i=0;i<10;i++)step();draw();});
+  $('#pi-reset').addEventListener('click',reset);
+  reset();
+})();
+
+/* ---------------- 5 splits ---------------- */
+(function(){
+  const svg=$('#sp-svg');const COUNTS=[270,285,260,300,290,255,240,376,275,280,265,250,207,310,320,349];
+  const TOTAL=COUNTS.reduce((a,b)=>a+b,0);
+  const COLS={0:'var(--line-2)',1:'var(--s1)',2:'var(--s2)',3:'var(--s3)'};
+  let dots=[];let timer=null;
+  function build(){dots=[];COUNTS.forEach((n,cls)=>{const k=Math.round(n/10);for(let i=0;i<k;i++)dots.push({cls,i,a:0});});}
+  function draw(){clear(svg);S('text',{x:8,y:14,class:'muted',text:'clase → ~10 repeticiones por punto'},svg);
+    dots.forEach(d=>{const x=60+d.i*11.5,y=32+d.cls*16.5;S('circle',{cx:x,cy:y,r:4.2,fill:COLS[d.a]},svg);});
+    for(let c=0;c<16;c++){S('text',{x:50,y:36+c*16.5,'text-anchor':'end',class:'mono muted',text:pad3(c)},svg);}
+    readout();
+  }
+  function readout(){const tot=[0,0,0,0];const c7=[0,0,0,0];const c12=[0,0,0,0];dots.forEach(d=>{tot[d.a]++;if(d.cls===7)c7[d.a]++;if(d.cls===12)c12[d.a]++;});
+    const all=dots.length;const pct=(a,b)=>b?fmt(100*a/b,1)+' %':'—';
+    $('#sp-read').innerHTML=`<div class="mono" style="color:var(--accent-ink)">resultado del reparto</div>
+    <table style="width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px;font-variant-numeric:tabular-nums">
+    <tr style="color:var(--muted)"><th style="text-align:left;font-weight:500">partición</th><th style="text-align:right;font-weight:500">puntos</th><th style="text-align:right;font-weight:500">% del total</th><th style="text-align:right;font-weight:500">% de 007</th><th style="text-align:right;font-weight:500">% de 012</th></tr>
+    ${[1,2,3].map(a=>`<tr><td style="color:${COLS[a]};font-weight:600">${['','train','val','test'][a]}</td><td style="text-align:right">${tot[a]}</td><td style="text-align:right">${pct(tot[a],all)}</td><td style="text-align:right">${pct(c7[a],tot[a])}</td><td style="text-align:right">${pct(c12[a],tot[a])}</td></tr>`).join('')}
+    <tr style="color:var(--muted)"><td>global</td><td style="text-align:right">${all}</td><td style="text-align:right">100 %</td><td style="text-align:right">${pct(c7.reduce((a,b)=>a+b),all)}</td><td style="text-align:right">${pct(c12.reduce((a,b)=>a+b),all)}</td></tr></table>
+    <p style="margin-top:8px">Estratificado: el % de cada clase se conserva en las tres particiones. Al azar: en <b>test</b> (la más chica) la proporción de una clase puede desviarse varios puntos.</p>`;}
+  function assign(strat){if(timer){clearInterval(timer);timer=null;}build();const r=rng(strat?7:13);
+    if(strat){for(let c=0;c<16;c++){const idx=dots.map((d,i)=>d.cls===c?i:-1).filter(i=>i>=0);for(let i=idx.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}const nT=Math.round(idx.length*0.7),nV=Math.round(idx.length*0.15);idx.forEach((di,q)=>{dots[di].t=q<nT?1:(q<nT+nV?2:3);});}}
+    else{const idx=dots.map((d,i)=>i);for(let i=idx.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}const nT=Math.round(idx.length*0.7),nV=Math.round(idx.length*0.15);idx.forEach((di,q)=>{dots[di].t=q<nT?1:(q<nT+nV?2:3);});}
+    if(REDUCED){dots.forEach(d=>d.a=d.t);draw();return;}
+    let c=0;timer=setInterval(()=>{dots.filter(d=>d.cls===c).forEach(d=>d.a=d.t);draw();c++;if(c>=16){clearInterval(timer);timer=null;}},70);
+  }
+  $('#sp-strat').addEventListener('click',()=>assign(true));$('#sp-rand').addEventListener('click',()=>assign(false));$('#sp-reset').addEventListener('click',()=>{if(timer){clearInterval(timer);timer=null;}build();draw();});
+  build();
+  // pre-assign stratified at rest
+  (function(){const r=rng(7);for(let c=0;c<16;c++){const idx=dots.map((d,i)=>d.cls===c?i:-1).filter(i=>i>=0);for(let i=idx.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}const nT=Math.round(idx.length*0.7),nV=Math.round(idx.length*0.15);idx.forEach((di,q)=>{dots[di].a=q<nT?1:(q<nT+nV?2:3);});}})();
+  draw();
+  // leakage
+  const lk=$('#lk-svg');S('text',{x:10,y:18,class:'ink',style:'font-weight:600',text:'una sesión: 10 repeticiones del mismo paciente haciendo 008'},lk);
+  const dest=[1,1,3,1,1,2,1,3,1,1];dest.forEach((a,i)=>{const x=40+i*40;S('circle',{cx:x,cy:60,r:13,fill:COLS[a]},lk);S('text',{x,y:64,'text-anchor':'middle',fill:'#fff',class:'mono',style:'font-size:11px',text:'r'+(i+1)},lk);S('text',{x,y:96,'text-anchor':'middle',class:'mono muted',style:'font-size:11px',text:['','train','val','test'][a]},lk);});
+  S('text',{x:470,y:55,class:'ink',text:'r3 y r8 caen en test, pero r1, r2, r4…'},lk);S('text',{x:470,y:72,class:'ink',text:'(casi idénticas) están en train.'},lk);
+})();
+
+/* ---------------- 6 confusion matrix ---------------- */
+(function(){
+  const CL=['006','008','009','012'];const M=[[40,3,2,15],[2,41,12,5],[1,10,46,3],[14,4,2,40]];
+  const tbl=$('#cm');let sel=1;
+  const tot=M.flat().reduce((a,b)=>a+b,0);const trace=M.reduce((a,r,i)=>a+r[i],0);
+  const rowS=M.map(r=>r.reduce((a,b)=>a+b,0));const colS=CL.map((_,j)=>M.reduce((a,r)=>a+r[j],0));
+  function f1s(i){const rec=M[i][i]/rowS[i],pre=M[i][i]/colS[i];return{rec,pre,f1:2*rec*pre/(rec+pre)};}
+  function render(){clear(tbl);
+    const thead=document.createElement('tr');thead.innerHTML='<th></th><th colspan="4" style="text-align:left;color:var(--muted)">predicha →</th>';tbl.appendChild(thead);
+    const h2=document.createElement('tr');h2.innerHTML='<th style="color:var(--muted);text-align:left">real ↓</th>'+CL.map(c=>`<th>${c}</th>`).join('');tbl.appendChild(h2);
+    const mx=Math.max(...M.flat());
+    M.forEach((r,i)=>{const tr=document.createElement('tr');if(i===sel)tr.className='sel';const th=document.createElement('th');th.className='rowh'+(i===sel?' sel':'');th.textContent=CL[i];th.addEventListener('click',()=>{sel=i;render();});tr.appendChild(th);
+      r.forEach((v,j)=>{const td=document.createElement('td');td.textContent=v;const a=0.12+0.75*v/mx;td.style.background=i===j?`rgba(42,120,214,${a})`:`rgba(235,104,52,${v/mx*0.8+0.06})`;if(i===j)td.className='diag';
+        hover(td,()=>i===j?`${v} repeticiones de ${CL[i]} bien clasificadas`:`${v} repeticiones que eran ${CL[i]}<br>pero el modelo dijo ${CL[j]}`);tr.appendChild(td);});
+      const ts=document.createElement('th');ts.style.color='var(--muted)';ts.textContent='n='+rowS[i];tr.appendChild(ts);tbl.appendChild(tr);});
+    const fr=document.createElement('tr');fr.innerHTML='<th style="color:var(--muted)">dijo</th>'+colS.map(c=>`<th style="color:var(--muted)">${c}</th>`).join('')+'<th></th>';tbl.appendChild(fr);
+    const macro=CL.map((_,i)=>f1s(i).f1).reduce((a,b)=>a+b,0)/4;const maj=Math.max(...rowS)/tot;
+    $('#cm-global').innerHTML=`<div class="row"><span class="k">Exactitud</span><span class="v">${trace} / ${tot} = <b>${fmt(100*trace/tot,1)} %</b></span></div>
+      <div class="row"><span class="k">Macro-F1</span><span class="v">(${CL.map((_,i)=>fmt(f1s(i).f1,2)).join(' + ')}) / 4 = <b>${fmt(macro,3)}</b></span></div>
+      <div class="row"><span class="k">Línea base</span><span class="v">siempre "${CL[rowS.indexOf(Math.max(...rowS))]}" → ${fmt(100*maj,1)} % (con 16 clases: 8.3 %)</span></div>`;
+    const s=f1s(sel);
+    $('#cm-class').innerHTML=`<div class="mono" style="color:var(--accent-ink)">clase ${CL[sel]}</div>
+      <div class="metric-list" style="margin-top:6px">
+      <div class="row"><span class="k">Recall</span><span class="v">${M[sel][sel]} / ${rowS[sel]} (fila) = <b>${fmt(s.rec,3)}</b></span></div>
+      <div class="row"><span class="k">Precisión</span><span class="v">${M[sel][sel]} / ${colS[sel]} (columna) = <b>${fmt(s.pre,3)}</b></span></div>
+      <div class="row"><span class="k">F1</span><span class="v">2·${fmt(s.rec,2)}·${fmt(s.pre,2)} / (${fmt(s.rec,2)} + ${fmt(s.pre,2)}) = <b>${fmt(s.f1,3)}</b></span></div></div>
+      <p style="margin-top:8px">De las ${rowS[sel]} repeticiones que eran ${CL[sel]}, el modelo atrapó ${M[sel][sel]}; la mayor fuga va a <b>${CL[M[sel].map((v,j)=>j===sel?-1:v).indexOf(Math.max(...M[sel].map((v,j)=>j===sel?-1:v)))]}</b>.</p>`;
+  }
+  render();
+})();
+
+/* ---------------- R² on one-hot ---------------- */
+(function(){
+  const svg=$('#r2-svg');const sc=$('#r2-scale');const c=7;const r=rng(21);const base=[];for(let j=0;j<16;j++)base.push(j===c?0:(r()-0.45)*0.5);
+  function draw(){clear(svg);const s=sc.value/100;$('#r2-scalev').textContent=fmt(s,2);
+    const yhat=base.map((v,j)=>j===c?s:v);const Y=base.map((_,j)=>j===c?1:0);
+    const L=40,R=510,B=170,T=20;const scale=(B-T)/2.1;const bw=(R-L)/16;
+    S('line',{x1:L,y1:B,x2:R,y2:B,class:'axis'},svg);[0.5,1,1.5,2].forEach(v=>{S('line',{x1:L,y1:B-v*scale,x2:R,y2:B-v*scale,class:'gridl'},svg);S('text',{x:L-6,y:B-v*scale+4,'text-anchor':'end',class:'mono muted',text:fmt(v,1)},svg);});
+    let am=0;yhat.forEach((v,j)=>{if(v>yhat[am])am=j;});
+    yhat.forEach((v,j)=>{const h=v*scale;S('rect',{x:L+j*bw+4,y:v>=0?B-h:B,width:bw-8,height:Math.abs(h),rx:2,fill:j===am?'var(--s1)':'var(--line-2)'},svg);
+      S('rect',{x:L+j*bw+4,y:B-Y[j]*scale,width:bw-8,height:Y[j]*scale||1,fill:'none',stroke:'var(--s2)','stroke-width':1.5,'stroke-dasharray':Y[j]?'':'2 2'},svg);
+      S('text',{x:L+j*bw+bw/2,y:B+16,'text-anchor':'middle',class:'mono muted',style:'font-size:10px',text:pad3(j)},svg);});
+    S('text',{x:L+c*bw+bw/2,y:B-s*scale-8,'text-anchor':'middle',fill:'var(--s1)',class:'mono',text:'Ŷ = '+fmt(s,2)},svg);
+    S('text',{x:R,y:B-scale-8,'text-anchor':'end',fill:'var(--s2)',text:'Y = 1 (one-hot)'},svg);
+    S('text',{x:L,y:T-6,class:'muted',text:'fila i: 16 salidas'},svg);S('text',{x:L,y:B+38,class:'muted',text:'argmax → '+pad3(am)+(am===c?'  (acierta)':'  (falla)')},svg);
+    const se=yhat.reduce((a,v,j)=>a+(v-Y[j])**2,0);const mse=se/16;const sst=16*(1/16)*(15/16);const r2=1-se/sst;
+    $('#r2-read').innerHTML=`<div class="mono" style="color:var(--accent-ink)">esta fila</div><div class="big">MSE ${fmt(mse,4)}</div><div class="def">Σ(Ŷⱼ − Yⱼ)² / 16</div>
+      <p>Error sólo en la clase correcta: (${fmt(s,2)} − 1)² = <span class="value">${fmt((s-1)**2,3)}</span>. El resto de columnas aportan <span class="value">${fmt(se-(s-1)**2,3)}</span>.</p>
+      <p style="margin-top:6px">R² de esta fila contra la varianza del one-hot: <b>${fmt(r2,3)}</b>. Clasificación: <b style="color:${am===c?'var(--good-ink)':'var(--crit)'}">${am===c?'acierta':'falla'}</b>.</p>
+      <p style="margin-top:6px">SST de una fila one-hot es fija (16 · 1/16 · 15/16 ≈ 0.94); cualquier "sobra" o "falta" en la salida come R² aunque el argmax no cambie.</p>`;
+  }
+  sc.addEventListener('input',draw);draw();
+  // gauges
+  const G=[{k:'Exactitud en test',thr:0.80,v:0.845,min:0.6,max:1,f:v=>fmt(100*v,1)+' %',dir:'≥'},{k:'Macro-F1 en test',thr:0.78,v:0.825,min:0.6,max:1,f:v=>fmt(v,3),dir:'≥'},{k:'Brecha train − test',thr:8,v:6.5,min:0,max:16,f:v=>fmt(v,1)+' pts',dir:'≤'},{k:'R² one-hot en test',thr:0.45,v:0.50,min:0,max:1,f:v=>fmt(v,2),dir:'≥'}];
+  const gs=$('#gauges');G.forEach(g=>{const d=document.createElement('div');d.className='gauge';const p=v=>100*(v-g.min)/(g.max-g.min);const ok=g.dir==='≥'?g.v>=g.thr:g.v<=g.thr;
+    d.innerHTML=`<span>${g.k} <span class="mono" style="color:var(--muted)">${g.dir} ${g.f(g.thr)}</span></span><div class="bar"><div class="fill" style="width:${p(g.v)}%;background:${ok?'var(--s1)':'var(--crit)'}"></div><div class="thr" style="left:${p(g.thr)}%" data-l="mín"></div></div><span class="v">${g.f(g.v)}</span>`;gs.appendChild(d);});
+})();
+
+/* ---------------- 8 sondeo ---------------- */
+(function(){
+  const svg=$('#sd-svg');
+  const rows=[{l:'sensor 1, 1 ventana',f:66,tr:0.725,te:0.724},{l:'ambos sensores, 1 ventana',f:132,tr:0.864,te:0.833},{l:'ambos, 2 ventanas',f:264,tr:0.885,te:0.833},{l:'ambos, 4 ventanas',f:528,tr:0.910,te:0.831},{l:'ambos, 8 ventanas',f:1056,tr:0.930,te:0.789},{l:'4 ventanas + completa + long., GD',f:662,tr:0.910,te:0.845}];
+  const L=230,R=690,T=30,B=270;const x=v=>L+(R-L)*(v-0.70)/(0.95-0.70);
+  for(let v=0.70;v<=0.951;v+=0.05){S('line',{x1:x(v),y1:T-8,x2:x(v),y2:B,class:'gridl'},svg);S('text',{x:x(v),y:B+16,'text-anchor':'middle',class:'mono muted',text:fmt(100*v,0)+' %'},svg);}
+  S('line',{x1:L,y1:B,x2:R,y2:B,class:'axis'},svg);S('text',{x:R,y:T-14,'text-anchor':'end',class:'muted',text:'exactitud'},svg);
+  rows.forEach((r,i)=>{const y=T+12+i*40;S('text',{x:L-12,y:y+4,'text-anchor':'end',class:i===5?'ink':'',style:i===5?'font-weight:600':'',text:r.l},svg);S('text',{x:L-12,y:y+18,'text-anchor':'end',class:'mono muted',style:'font-size:11px',text:r.f+' caract.'},svg);
+    S('line',{x1:x(r.te),y1:y,x2:x(r.tr),y2:y,stroke:'var(--line-2)','stroke-width':3},svg);
+    const gap=r.tr-r.te;S('text',{x:(x(r.te)+x(r.tr))/2,y:y-10,'text-anchor':'middle',class:'mono',fill:gap>0.08?'var(--crit)':'var(--muted)',style:'font-size:11px',text:'brecha '+fmt(100*gap,1)},svg);
+    const a=S('circle',{cx:x(r.tr),cy:y,r:7,fill:'var(--s1)',stroke:'var(--surface)','stroke-width':2},svg);hover(a,()=>`<b>train</b> ${fmt(100*r.tr,1)} %<br>${r.l}`);
+    const b=S('circle',{cx:x(r.te),cy:y,r:7,fill:'var(--s2)',stroke:'var(--surface)','stroke-width':2},svg);hover(b,()=>`<b>test</b> ${fmt(100*r.te,1)} %<br>${r.l}`);
+  });
+  // recall chart
+  const rc=$('#rc-svg');const rec=[['012',0.54],['006',0.67],['008',0.68],['011',0.94],['004',0.95],['007',0.96]];
+  const L2=80,R2=690,T2=26;const xx=v=>L2+(R2-L2)*v;
+  S('text',{x:L2,y:14,class:'muted',text:'recall en test, 4 ventanas'},rc);
+  [0,0.25,0.5,0.75,1].forEach(v=>{S('line',{x1:xx(v),y1:T2,x2:xx(v),y2:T2+6*30,class:'gridl'},rc);S('text',{x:xx(v),y:T2+6*30+16,'text-anchor':'middle',class:'mono muted',text:fmt(v,2)},rc);});
+  rec.forEach(([c,v],i)=>{const y=T2+i*30;S('text',{x:L2-10,y:y+15,'text-anchor':'end',class:'mono ink',text:c},rc);const b=S('rect',{x:L2,y:y+4,width:xx(v)-L2,height:18,rx:3,fill:v<0.7?'var(--s2)':'var(--s1)'},rc);hover(b,()=>`${c}: recall ${fmt(v,2)}`);S('text',{x:xx(v)+6,y:y+17,class:'mono',fill:'var(--ink)',text:fmt(v,2)},rc);});
+  S('line',{x1:L2,y1:T2,x2:L2,y2:T2+6*30,class:'axis'},rc);
+})();
+})();
+</script>

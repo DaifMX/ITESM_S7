@@ -1,0 +1,17 @@
+[project]
+name = "linear-regression"
+version = "0.1.0"
+description = "Reto 1 · T1: dataset por ventanas + regresión lineal multisalida escrita a mano (sin bibliotecas de ML)"
+readme = "README.md"
+authors = [
+    { name = "Daif", email = "applediegoaif@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "matplotlib>=3.11",
+    "numpy>=2.5",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"

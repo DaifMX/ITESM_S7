@@ -1,0 +1,12 @@
+# Dataset crudo (372 MB): se descarga del DOI del artículo, ver docs/README.md
+Data/
+
+# Python / uv
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Sistema
+.DS_Store
