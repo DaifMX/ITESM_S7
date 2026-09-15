@@ -1,0 +1,8 @@
+.venv/
+.venv-new/
+.venv-py314-backup/
+data/
+results/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
