@@ -1,0 +1,11 @@
+# Spark introduction notebook dependencies
+pyspark==3.5.3
+psutil==6.1.0
+
+# Notebook runtime
+jupyter==1.1.1
+ipykernel==6.29.5
+
+# Used by Spark for Arrow-based conversions / .toPandas()
+pandas==2.2.3
+pyarrow==17.0.0
